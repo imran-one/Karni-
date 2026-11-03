@@ -4,16 +4,16 @@ import { creerClientDepuisFormulaire } from "./clients.js";
 const listeClients = document.getElementById("liste-clients");
 const modeleClient = document.getElementById("modele-client");
 const etatVide = document.getElementById("etat-vide");
+const aucun = document.getElementById("etat-aucun-resultat");
 
 export function renderClients() {
   listeClients.replaceChildren();
 
-  if (state.clients.length === 0) {
-    etatVide.classList.remove("hidden");
-    return;
-  }
+  const clients = preparerListe(state);
+  const carnetVide = state.clients.length === 0;
 
-  etatVide.classList.add("hidden");
+  etatVide.classList.toggle("hidden", !carnetVide);
+  aucun.classList.toggle("hidden", carnetVide || clients.length > 0);
 
   for (const client of state.clients) {
     const fragment = modeleClient.content.cloneNode(true);
