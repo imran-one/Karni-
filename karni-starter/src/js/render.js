@@ -1,5 +1,6 @@
 import { state } from "./state.js";
 import { creerClientDepuisFormulaire } from "./clients.js";
+import { calculerSolde, getStatusClient } from "./calculation.js";
 
 const listeClients = document.getElementById("liste-clients");
 const modeleClient = document.getElementById("modele-client");
@@ -31,8 +32,14 @@ export function renderClients() {
 
     telephone.textContent = client.telephone || "Téléphone non renseigné";
 
-    solde.textContent = "0,00 MAD";
-    badges.textContent = "À jour";
+    const montantSolde = calculerSolde(client.id, state.operations);
+    const status = getStatusClient(client, state.operations, new Date());
+
+    solde.textContent = `${(montantSolde / 100)
+      .toFixed(2)
+      .replace(".", ",")} MAD`;
+
+    badges.textContent = status;
 
     const nomsSr = fragment.querySelectorAll(".nom-sr");
 
