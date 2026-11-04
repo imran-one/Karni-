@@ -1,7 +1,11 @@
-export function trier(clients, tri) {
+import { calculerSolde } from "./calculation.js";
+
+
+export function trier(clients, tri, operations) {
   const copie = [...clients];
   const comparateurs = {
     nom: (a, b) => a.nom.localeCompare(b.nom, "fr", { sensitivity: "base" }),
+    solde: (a,b)=> calculerSolde(b.id, operations) - calculerSolde(a.id, operations),
   };
   copie.sort(comparateurs[tri] ?? comparateurs.nom);
   return copie;
@@ -19,5 +23,5 @@ export function preparerListe(state){
     const tri = state.filtres.tri;
     const clients = state.clients;
     const clientsfiltrer = filtrer(clients, recherche);
-    return trier(clientsfiltrer,tri);
+    return trier(clientsfiltrer,tri, state.operations);
 }
