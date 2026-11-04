@@ -1,4 +1,11 @@
 import { calculerSolde } from "./calculation.js";
+import { getStatusClient } from "./calculation.js";
+const CODES = {
+  "À jour": "a-jour",
+  "En dette": "en-dette",
+  "En retard": "en-retard",
+  "Plafond atteint": "en-dette",
+};
 
 
 export function trier(clients, tri, operations) {
@@ -15,16 +22,22 @@ export function normaliser(texte){
     const cleanText = texte.trim().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     return cleanText.toLowerCase();
 }
-export function filtrer(clients, recherche){
-    const t = normaliser(recherche);
-    return clients.filter(c=> normaliser(c.nom).includes(t));
+export function filtrer(clients, recherche, statut, operations) {
+  const t = normaliser(recherche);
+
+  return clients.filter(c => {
+    const okNom = normaliser(c.nom).includes(t);
+    const okStatut = statut === "tous" || CODES[getStatusClient(c, operations, new Date())] === statut;
+    return okNom && okStatut;
+  });
 }
 export function preparerListe(state){
     const recherche = state.filtres.recherche;
     const tri = state.filtres.tri;
     const clients = state.clients;
-    const clientsfiltrer = filtrer(clients, recherche);
+    const clientsfiltrer = filtrer(clients, recherche, state.filtres.statut, state.operations);
     return trier(clientsfiltrer,tri, state.operations);
+    
 }
 function derniereOperation(clientId, operations) {
   return operations
