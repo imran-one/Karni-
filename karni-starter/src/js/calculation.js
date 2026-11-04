@@ -13,7 +13,7 @@ export function statuserSolde(clientId, operations) {
 return totalAchat - totalRemboursement;
 
 }
-
+export const calculerSolde = statuserSolde;
 export function getStatusClient(client, operations, aujourdHui){
     const solde = statuserSolde(client.id, operations);
     
