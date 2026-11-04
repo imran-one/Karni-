@@ -30,4 +30,8 @@ document.getElementById("reinitialiser-filtres").addEventListener("click", () =>
   state.filtres = { recherche: "", statut: "tous", tri: "nom" };
   renderClients();
 })
+document.getElementById("filtre-statut").addEventListener("change", (e) => {
+  state.filtres.statut = e.target.value;
+  renderClients();
+});
 renderClients();
