@@ -6,6 +6,7 @@ export function trier(clients, tri, operations) {
   const comparateurs = {
     nom: (a, b) => a.nom.localeCompare(b.nom, "fr", { sensitivity: "base" }),
     solde: (a,b)=> calculerSolde(b.id, operations) - calculerSolde(a.id, operations),
+    recent: (a,b) => derniereOperation(b.id, operations).localeCompare(derniereOperation(a.id,operations)) ,
   };
   copie.sort(comparateurs[tri] ?? comparateurs.nom);
   return copie;
@@ -24,4 +25,9 @@ export function preparerListe(state){
     const clients = state.clients;
     const clientsfiltrer = filtrer(clients, recherche);
     return trier(clientsfiltrer,tri, state.operations);
+}
+function derniereOperation(clientId, operations) {
+  return operations
+    .filter(o => o.clientId === clientId)
+    .reduce((max, o) => (o.date > max ? o.date : max), "");
 }
