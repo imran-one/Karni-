@@ -1,5 +1,4 @@
-export function calculerSolde(clientId, operations) {
-  let solde = 0;
+export function statuserSolde(clientId, operations) {
   let totalAchat = 0;
   let totalRemboursement = 0;
   for(let i = 0; i<operations.length; i++){
@@ -11,12 +10,12 @@ export function calculerSolde(clientId, operations) {
     }
    }
 }
-return solde = totalAchat - totalRemboursement;
+return totalAchat - totalRemboursement;
 
 }
 
 export function getStatusClient(client, operations, aujourdHui){
-    const solde = calculerSolde(client.id, operations);
+    const solde = statuserSolde(client.id, operations);
     
     if(solde === 0){
         return "À jour"
@@ -47,4 +46,40 @@ export function getStatusClient(client, operations, aujourdHui){
     }else{
         return "En dette"
     }
+}
+
+export function statuserTotalDu(clients, operations){
+    let totalDu = 0;
+    for(let i = 0; i < clients.length; i++){
+       const solde = statuserSolde(clients[i].id, operations);
+       totalDu += solde;
+       
+    }
+    return totalDu;
+}
+
+export function nombresDeclient(clients){
+   return clients.length;
+}
+
+export function nombreClientsEndettes(clients, operations){
+    let dette = 0;
+    for(let i = 0; i < clients.length; i++){
+        let solde = statuserSolde(clients[i].id, operations);
+        if(solde > 0){
+           dette++;
+        }
+    }
+    return dette;
+}
+
+export function nombreClientsEnRetard(clients, operations, aujourdHui){
+    let retard = 0;
+    for(let i = 0; i < clients.length; i++){
+    let status = getStatusClient(clients[i], operations, aujourdHui)
+        if(status === "En retard"){
+            retard++
+        }
+    }    
+    return retard;
 }
