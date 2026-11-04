@@ -9,9 +9,28 @@ import { initExport } from "./exporter.js";
 
 initClientDialog();
 initExport();
-const demo = creerDemo();
-state.clients = demo.clients;
-state.operations = demo.operations;
+
+const chargé = document.getElementById('charger-demo');
+const vider = document.getElementById('vider-carnet');
+
+chargé.addEventListener('click', function(){
+  if(!confirm("Charger les données de démonstration ?")){
+    return;
+  }
+    const demo = creerDemo();
+    state.clients = demo.clients;
+    state.operations = demo.operations;
+    renderClients();
+})
+
+vider.addEventListener("click", function(){
+  if(!confirm("Voulez-vous vraiment vider le carnet ?")){
+    return;
+  }
+  state.clients = [];
+  state.operations = [];
+  renderClients();
+})
 // TODO-US-05: remplacer par localStorage
 
 document.getElementById("recherche").addEventListener("input", (e) => {
