@@ -1,5 +1,5 @@
 import { state } from "./state.js";
-import { creerClientDepuisFormulaire } from "./clients.js";
+import { preparerListe } from "./recherche.js";
 import { calculerSolde, getStatusClient } from "./calculation.js";
 
 const listeClients = document.getElementById("liste-clients");
@@ -16,7 +16,7 @@ export function renderClients() {
   etatVide.classList.toggle("hidden", !carnetVide);
   aucun.classList.toggle("hidden", carnetVide || clients.length > 0);
 
-  for (const client of state.clients) {
+  for (const client of clients) {
     const fragment = modeleClient.content.cloneNode(true);
 
     const carte = fragment.querySelector("li");
