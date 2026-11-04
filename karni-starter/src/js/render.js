@@ -1,13 +1,35 @@
 import { state } from "./state.js";
 import { preparerListe } from "./recherche.js";
-import { calculerSolde, getStatusClient } from "./calculation.js";
+import {
+  statuserSolde,
+  getStatusClient,
+  statuserTotalDu,
+  nombresDeclient,
+  nombreClientsEndettes,
+  nombreClientsEnRetard,
+} from "./calculation.js";
 
 const listeClients = document.getElementById("liste-clients");
 const modeleClient = document.getElementById("modele-client");
 const etatVide = document.getElementById("etat-vide");
 const aucun = document.getElementById("etat-aucun-resultat");
 
+export function renderTableauDeBord() {
+  const totalDu = statuserTotalDu(state.clients, state.operations);
+  const clients = nombresDeclient(state.clients);
+  const enDette = nombreClientsEndettes(state.clients, state.operations);
+  const enRetard = nombreClientsEnRetard(state.clients, state.operations, new Date());
+
+  document.getElementById("total-du").textContent =
+    `${(totalDu / 100).toFixed(2).replace(".", ",")} MAD`;
+
+  document.getElementById("nb-clients").textContent = clients;
+  document.getElementById("nb-en-dette").textContent = enDette;
+  document.getElementById("nb-en-retard").textContent = enRetard;
+}
+
 export function renderClients() {
+  renderTableauDeBord();
   listeClients.replaceChildren();
 
   const clients = preparerListe(state);
@@ -32,7 +54,7 @@ export function renderClients() {
 
     telephone.textContent = client.telephone || "Téléphone non renseigné";
 
-    const montantSolde = calculerSolde(client.id, state.operations);
+    const montantSolde = statuserSolde(client.id, state.operations);
     const status = getStatusClient(client, state.operations, new Date());
 
     solde.textContent = `${(montantSolde / 100)
