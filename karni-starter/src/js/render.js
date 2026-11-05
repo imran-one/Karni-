@@ -17,7 +17,7 @@ const aucun = document.getElementById("etat-aucun-resultat");
 export function renderTableauDeBord() {
   const totalDu = statuserTotalDu(state.clients, state.operations);
   const clients = nombresDeclient(state.clients);
-  const enDette = nombreClientsEndettes(state.clients, state.operations);
+  const enDette = nombreClientsEndettes(state.clients, state.operations, new Date());
   const enRetard = nombreClientsEnRetard(state.clients, state.operations, new Date());
 
   document.getElementById("total-du").textContent =
