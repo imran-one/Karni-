@@ -62,11 +62,11 @@ export function nombresDeclient(clients){
    return clients.length;
 }
 
-export function nombreClientsEndettes(clients, operations){
+export function nombreClientsEndettes(clients, operations, aujourdHui){
     let dette = 0;
     for(let i = 0; i < clients.length; i++){
-        let solde = statuserSolde(clients[i].id, operations);
-        if(solde > 0){
+        let cas = getStatusClient(clients[i], operations, aujourdHui)
+        if(cas === "En dette"){
            dette++;
         }
     }
