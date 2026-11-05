@@ -1,3 +1,5 @@
+import { state } from "./state.js";
+
 export function calculerSolde(clientID, operations){
     let totalAchats = 0;
     let totalRembourssement = 0;
@@ -32,13 +34,25 @@ export function ajouterOperation(operations, nouvelleOperation){
     return operations;
 }
 
+export function recupererOperations(clientID, operations) {
+    return operations.filter(function(operation) {
+        return operation.clientId === clientID;
+    });
+}
+
+let clientActuelId = null;
+
+export function definirClientActuel(id) {
+    clientActuelId = id;
+}
+
 const montantFicheInput = document.getElementById("operation-montant");
 const dateFicheInput = document.getElementById("operation-date");
 const libelleFicheInput = document.getElementById("operation-libelle");
 const ficheForm = document.getElementById("form-operation");
 const radioType = document.getElementsByName("operation-type");
 
-function validMontant(){
+export function validMontant(){
     const montant = montantFicheInput.value;
     const regex = /^\d+([.,]\d{1,2})?$/;
     if(montant === ""){
@@ -59,7 +73,7 @@ function validMontant(){
     return regex.test(montant);
 }
 
-function validDate(){
+export function validDate(){
     const date = dateFicheInput.value;
     const aujourdhui = new Date().toISOString().split("T")[0];
     if(date === ""){
@@ -71,7 +85,7 @@ function validDate(){
     return true;
 }
 
-function validLibelle(type){
+export function validLibelle(type){
     const libelle = libelleFicheInput.value.trim();
     if(libelle.length > 60){
         return false;
@@ -86,20 +100,3 @@ function validLibelle(type){
 const ficheDispo = document.getElementById("fiche-disponible");
 const ficheSolde = document.getElementById("fiche-solde");
 
-ficheForm.addEventListener("submit", function(event){
-    event.preventDefault();
-    const montant = Number(montantFicheInput.value.replace(",", "."));
-    const date = dateFicheInput.value;
-    const libelle = libelleFicheInput.value;
-    const type = document.querySelector('input[name="operation-type"]:checked').value
-
-    if(!validLibelle(type) || !validDate() || !validMontant()){
-        return;
-    }
-    if(type === "achat" && montant > Number(ficheDispo.textContent)){
-        return;
-    }
-    if(type === "remboursement" && montant > Number(ficheSolde.textContent)){
-        return;
-    }
-})
