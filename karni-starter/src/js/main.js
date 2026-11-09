@@ -17,10 +17,8 @@ import {
   validLibelle
 } from "./operations.js";
 import { initImport } from "./importer.js";
+import { charger,sauvegarder } from "./stockage.js";
 
-
-initClientDialog();
-initExport();
 initClientDialog();
 initExport();
 initImport();
@@ -35,6 +33,7 @@ chargé.addEventListener('click', function(){
     const demo = creerDemo();
     state.clients = demo.clients;
     state.operations = demo.operations;
+    sauvegarder();
     renderClients();
 })
 
@@ -44,9 +43,9 @@ vider.addEventListener("click", function(){
   }
   state.clients = [];
   state.operations = [];
+  sauvegarder();
   renderClients();
 })
-// TODO-US-05: remplacer par localStorage
 
 document.getElementById("recherche").addEventListener("input", (e) => {
   state.filtres.recherche = e.target.value;
@@ -71,7 +70,6 @@ document.getElementById("filtre-statut").addEventListener("change", (e) => {
   state.filtres.statut = e.target.value;
   renderClients();
 });
-renderClients();
 
 const dialog = document.getElementById("fiche-client");
 const listeClients = document.getElementById("liste-clients");
@@ -123,6 +121,8 @@ ficheForm.addEventListener("submit", function(event){
     const nouveauDisponible = calculerCreditDispo(plafond, nouveauSolde);
     ficheSolde.textContent = nouveauSolde.toFixed(2) + " MAD";
     ficheDisponible.textContent = nouveauDisponible.toFixed(2) + " MAD";
+    sauvegarder();
+    renderClients();
 })
 
 const ficheSolde = document.getElementById("fiche-solde");
@@ -157,6 +157,7 @@ historique.addEventListener("click", function(event) {
     const disponible = calculerCreditDispo(plafond, solde);
     ficheSolde.textContent = solde.toFixed(2) + " MAD";
     ficheDisponible.textContent = disponible.toFixed(2) + " MAD";
+    sauvegarder();
     renderClients();
 });
 
@@ -229,4 +230,9 @@ ficheFermer.addEventListener("click", function() {
     dialog.close();
 });
 
-
+const data = charger();
+if (data !== null) {
+  state.clients = data.clients;
+  state.operations = data.operations;
+}
+renderClients();

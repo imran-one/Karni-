@@ -1,6 +1,7 @@
 import { state } from "./state.js";
 import { ajouterClient } from "./state.js";
 import { renderClients } from "./render.js";
+import { sauvegarder } from "./stockage.js";
 
 export const newClient = document.getElementById("nouveau-client");
 export const clientDiag = document.getElementById("dialog-client");
@@ -132,9 +133,11 @@ export function initClientDialog() {
     if (indexClient === -1) return;
 
     state.clients.splice(indexClient, 1);
-
+    state.operations = state.operations.filter(
+      (o) => o.clientId !== clientASupprimerId,
+    );
     clientASupprimerId = null;
-
+    sauvegarder();
     renderClients();
   });
 }
@@ -312,7 +315,7 @@ clientForm.addEventListener("submit", (e) => {
       const client = creerClientDepuisFormulaire();
       ajouterClient(client);
     }
-
+    sauvegarder();
     renderClients();
 
     clientForm.reset();
