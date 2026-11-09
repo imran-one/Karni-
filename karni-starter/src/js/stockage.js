@@ -1,4 +1,5 @@
 import { state } from "./state.js";
+import { carnetValider } from "./validation.js";
 
 const CLE = "karni:v1";
 const CLE_ILLISIBLE = "karni:sauvegarde-illisible";
@@ -32,9 +33,7 @@ export function charger() {
     brut = localStorage.getItem(CLE);
     if (brut === null) return null;
     const donnees = JSON.parse(brut);
-    if (
-      !(Array.isArray(donnees.clients) && Array.isArray(donnees.operations))
-    ) {
+    if (!carnetValider(donnees)) {
       throw new Error("FORMAT invalide");
     }
     return { clients: donnees.clients, operations: donnees.operations };
