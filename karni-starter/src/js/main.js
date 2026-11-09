@@ -16,10 +16,14 @@ import {
   validDate,
   validLibelle
 } from "./operations.js";
+import { initImport } from "./importer.js";
 
 
 initClientDialog();
 initExport();
+initClientDialog();
+initExport();
+initImport();
 
 const chargé = document.getElementById('charger-demo');
 const vider = document.getElementById('vider-carnet');
